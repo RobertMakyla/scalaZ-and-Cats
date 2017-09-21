@@ -1,2 +1,1 @@
-# scalaZ-and-Cats
-scalaZ and Cats playground
+## scalaZ and Cats playground
