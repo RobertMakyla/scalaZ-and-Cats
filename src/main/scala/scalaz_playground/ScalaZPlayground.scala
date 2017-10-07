@@ -55,5 +55,36 @@ object ScalaZPlayground {
      */
   }
 
+  object FunctorMonadApplicative{
+    /** Just a reminder what is functor:
+     *
+     *  trait Functor[A] {
+     *     def map[B](f: A => B): Functor[B]
+     *     def unit(a: A): Functor[A]
+     *  }
+     */
+
+    /**
+     * Functors - ScalaZ has some interesting implicit functors
+     *
+     * Thanks to it, I can use  map() (or ∘() )  on things I wouldn't expect to have map()
+     *
+     * The '∘' is alias for map
+     */
+
+    def functorForTuple = (1, 2, 3) ∘ (_ * 100) // however it applies only on last element (1, 2, 300)
+
+    def functorForFunction1_toUpperCase = ((s: String) => s.toUpperCase) map (_ + "...")
+    def functorForFunction1_toLowerCase = ((s: String) => s.toLowerCase) ∘ (_ + "...")
+
+    /** it's exactly the same as composition:  f andThen g */
+    def andThen_toLowerCase = ((s: String) => s.toLowerCase) andThen (_ + "...")
+
+    /**
+     * Functors additionally have some operators for overriding values:
+     */
+    def functorForList_overridesElements1 = List(1,2,3) as "x" // List (x, x, x)
+    def functorForList_overridesElements2 = List(1,2,3) >| "x" // List (x, x, x)
+  }
 }
 
