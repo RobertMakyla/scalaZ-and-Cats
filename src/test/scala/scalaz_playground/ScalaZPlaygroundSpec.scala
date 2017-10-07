@@ -29,8 +29,8 @@ class ScalaZPlaygroundSpec extends FreeSpec with MustMatchers {
     }
   }
 
-  "Functor, Monad, Applicative" - {
-    import ScalaZPlayground.FunctorMonadApplicative._
+  "Functor, Applicative, Monad" - {
+    import ScalaZPlayground.FunctorApplicativeMonad._
 
     "functor for tuples" in {
       functorForTuple mustBe ((1, 2, 300))
@@ -43,6 +43,10 @@ class ScalaZPlaygroundSpec extends FreeSpec with MustMatchers {
     "functor for List - overriding elements" in {
       functorForList_overridesElements1 mustBe List("x", "x", "x")
       functorForList_overridesElements2 mustBe List("x", "x", "x")
+    }
+    "applicative" in {
+      applicativeOldStyle mustBe Some(8)
+      applicativeValidation mustBe Some(8)
     }
 
   }

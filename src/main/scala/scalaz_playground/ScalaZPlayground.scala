@@ -55,7 +55,7 @@ object ScalaZPlayground {
      */
   }
 
-  object FunctorMonadApplicative{
+  object FunctorApplicativeMonad{
     /** Just a reminder what is functor:
      *
      *  trait Functor[A] {
@@ -85,6 +85,21 @@ object ScalaZPlayground {
      */
     def functorForList_overridesElements1 = List(1,2,3) as "x" // List (x, x, x)
     def functorForList_overridesElements2 = List(1,2,3) >| "x" // List (x, x, x)
+
+    /** Just a reminder what is Applicative:
+     *
+     *   trait Applicative2[A] {
+     *       def apply[B](f: Applicative2[A => B]): Applicative2[B]
+     *       def unit[T](a: T): Applicative2[T]
+     *   }
+     */
+
+    def applicativeOldStyle =  ^(3.some, 5.some) (_ + _) // Some(8)
+
+    // ScalaZ applicative builder
+    def applicativeValidation = (3.some |@| 5.some) (_ + _) // Some(8)
+
+
   }
 }
 
