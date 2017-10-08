@@ -29,6 +29,9 @@ object ScalaZPlayground {
     def equalTypeSafeForPerson(a: Person, b: Person): Boolean = a === b
     def notEqualTypeSafeForPerson(a: Person, b: Person): Boolean = a =/= b
 
+    // A Context Bound 'T : Equal' requires that there is implicit value of Equal[T]
+    def equalTypeSafe[T: Equal](a: T, b: T) = a === b
+
     /**
      * Order - fails compilation if types don't match (eg Int and Double)
      *
@@ -45,7 +48,10 @@ object ScalaZPlayground {
       override def shows(a: Person) = s"name: ${a.name}, age: ${a.age}"
     }
 
-    def showsPerson: String = Person("Rob", 32).shows
+    def showsPersonRob32: String = Person("Rob", 32).shows
+
+    // A Context Bound 'T : Show' requires that there is implicit value of Show[T]
+    def showsAnything[T: Show](t: T) = t.shows
 
     /**
      * Enum
@@ -77,7 +83,7 @@ object ScalaZPlayground {
     def functorForFunction1_toUpperCase = ((s: String) => s.toUpperCase) map (_ + "...")
     def functorForFunction1_toLowerCase = ((s: String) => s.toLowerCase) ∘ (_ + "...")
 
-    /** it's exactly the same as composition:  f andThen g */
+    /** functor for function it's exactly the same as composition:  f andThen g */
     def andThen_toLowerCase = ((s: String) => s.toLowerCase) andThen (_ + "...")
 
     /**
@@ -98,8 +104,29 @@ object ScalaZPlayground {
 
     // ScalaZ applicative builder
     def applicativeValidation = (3.some |@| 5.some) (_ + _) // Some(8)
+  }
 
+  object SemigroupsMonoidsGroups {
+    /**
+     * In "Category Theory" we have following categories :
+     *
+     * Magma     - type T and some binary operation (not associative)
+     * Semigroup - type T + associative operation
+     * Monoid    - type T + associative operation + identity element (zero element)
+     * Group     - type T + associative operation + identity element (zero element)
+     *             + invertibility (for each element 'a: T' there is another 'b:T' for which op(a,b) == zero element
+     */
 
+    /**
+     * In ScalaZ :
+     * Semigroup's associative operator is: |+| or ⊹ or mappend
+     * Monoids's identity element is:       .zero
+     */
+
+    // A Context Bound 'T : Monoid' requires that there is implicit value of Monoid[T]
+    def semigroupOperator[T: Semigroup](a: T, b: T) = a |+| b
+    def monoidIdentity[T: Monoid] = Monoid[T].zero // eg: monoidIdentity[List[Int]]  gives  List.empty[Int]
+    def addingIdentityToMonoid[T: Monoid](t: T): T = t |+| Monoid[T].zero
   }
 }
 
