@@ -127,6 +127,24 @@ object ScalaZPlayground {
     def semigroupOperator[T: Semigroup](a: T, b: T) = a |+| b
     def monoidIdentity[T: Monoid] = Monoid[T].zero // eg: monoidIdentity[List[Int]]  gives  List.empty[Int]
     def addingIdentityToMonoid[T: Monoid](t: T): T = t |+| Monoid[T].zero
+
+    /**
+     * if there is implicit Semigroup[A], ScalaZ implements an imlpicit Monoid[Option[A]]
+     * so I can add it up even with zero element (Monoid) :
+     *
+     * Some(1) |+| Some(1) |+| None |+| Some(1) |+| None  // ==> 3
+     */
+
+    implicit def optionMonoid[A: Semigroup]: Monoid[Option[A]] = new Monoid[Option[A]] {
+      def append(maybeA1: Option[A], maybeA2: => Option[A]) = (maybeA1, maybeA2) match {
+        case (Some(a1), Some(a2)) => Some(a1 |+| a2)
+        case (Some(a1), None) => maybeA1
+        case (None, Some(a2)) => maybeA2
+        case (None, None) => None
+      }
+      def zero: Option[A] = None
+    }
+
   }
 }
 

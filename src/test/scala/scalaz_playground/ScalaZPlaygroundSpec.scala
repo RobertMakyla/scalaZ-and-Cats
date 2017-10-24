@@ -66,6 +66,12 @@ class ScalaZPlaygroundSpec extends FreeSpec with MustMatchers {
       addingIdentityToMonoid("anything") mustBe "anything"
       addingIdentityToMonoid(List('a, 'b)) mustBe List('a, 'b)
     }
+
+    "Monoid of Option" in {
+      import ScalaZPlayground.SemigroupsMonoidsGroups.optionMonoid
+
+      1.some |+| 1.some |+| None |+| 1.some |+| None mustBe Some(3)
+    }
   }
 
 }
