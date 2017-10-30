@@ -179,5 +179,20 @@ object ScalaZPlayground {
 
   }
 
+  object UsefulMonadicFunctions {
+
+    /**
+     * .join  works like flattening
+     */
+    def joinedOptionOfOption: Option[Int] = (Some(Some(9)): Option[Option[Int]]).join // Some(9)
+    def joinedListOfList: List[Int] = List(List(1, 2, 3), List(4, 5, 6)).join // List(1,2,3,4,5,6)
+
+    /**
+     * .filterM works like all combinations:
+     */
+    def sth: List[List[Int]] = List(1, 2, 3) filterM { x => List(true, false) }
+    // List( List(1), List(2), List(3), List(1,2), List(2,3), List(1,3), List(1,2,3), Nil )
+
+  }
 }
 

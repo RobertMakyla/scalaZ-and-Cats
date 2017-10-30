@@ -84,6 +84,21 @@ class ScalaZPlaygroundSpec extends FreeSpec with MustMatchers {
 
     }
 
+    "Useful Monadic functions" in {
+      import ScalaZPlayground.UsefulMonadicFunctions._
+
+      (Some(9.some): Option[Option[Int]]).join mustBe 9.some
+
+      List(List(1), List(2)).join mustBe List(1,2)
+
+      List(1, 2, 3) filterM { x => List(true, false) } must contain theSameElementsAs
+        List( List(1), List(2), List(3), List(1,2), List(2,3), List(1,3), List(1,2,3), Nil )
+
+      List(1, 2) filterM { x => List(true, true) } must contain theSameElementsAs
+        List( List(1,2), List(1,2), List(1,2), List(1,2) )
+
+    }
+
   }
 
 }
