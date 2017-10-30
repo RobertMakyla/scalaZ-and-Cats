@@ -49,10 +49,6 @@ class ScalaZPlaygroundSpec extends FreeSpec with MustMatchers {
       functorForList_overridesElements1 mustBe List("x", "x", "x")
       functorForList_overridesElements2 mustBe List("x", "x", "x")
     }
-    "applicative" in {
-      applicativeOldStyle mustBe Some(8)
-      applicativeValidation mustBe Some(8)
-    }
 
     "Semigroups Monoids Groups" in {
       import ScalaZPlayground.SemigroupsMonoidsGroups._
@@ -72,6 +68,22 @@ class ScalaZPlaygroundSpec extends FreeSpec with MustMatchers {
 
       1.some |+| 1.some |+| None |+| 1.some |+| None mustBe Some(3)
     }
+
+    "ApplicativeBuilder with Validation" - {
+      import ScalaZPlayground.ApplicativeBuilderWithValidation._
+
+      "applicative" in {
+        applicativeOldStyle mustBe Some(8)
+        applicativeValidation mustBe Some(8)
+      }
+
+      "Validation" in {
+        validation mustBe Failure("23")
+        validationNel mustBe Failure(NonEmptyList( "2", "3"))
+      }
+
+    }
+
   }
 
 }

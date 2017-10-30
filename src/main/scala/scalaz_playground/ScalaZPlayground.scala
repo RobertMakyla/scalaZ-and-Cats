@@ -92,18 +92,6 @@ object ScalaZPlayground {
     def functorForList_overridesElements1 = List(1,2,3) as "x" // List (x, x, x)
     def functorForList_overridesElements2 = List(1,2,3) >| "x" // List (x, x, x)
 
-    /** Just a reminder what is Applicative:
-     *
-     *   trait Applicative2[A] {
-     *       def apply[B](f: Applicative2[A => B]): Applicative2[B]
-     *       def unit[T](a: T): Applicative2[T]
-     *   }
-     */
-
-    def applicativeOldStyle =  ^(3.some, 5.some) (_ + _) // Some(8)
-
-    // ScalaZ applicative builder
-    def applicativeValidation = (3.some |@| 5.some) (_ + _) // Some(8)
   }
 
   object SemigroupsMonoidsGroups {
@@ -146,5 +134,50 @@ object ScalaZPlayground {
     }
 
   }
+
+  object ApplicativeBuilderWithValidation{
+    /** Just a reminder what is Applicative:
+     *
+     *   trait Applicative2[A] {
+     *       def apply[B](f: Applicative2[A => B]): Applicative2[B]
+     *       def unit[T](a: T): Applicative2[T]
+     *   }
+     */
+
+    // shitty cause it takes only 2 arguments
+    def applicativeOldStyle =  ^(3.some, 5.some) (_ + _) // Some(8)
+
+    // ScalaZ applicative builder
+    def applicativeValidation = (3.some |@| 5.some) (_ + _) // Some(8)
+
+    /**
+     * Validation is similar to \/ cause :
+     * \/         - has implementations: \/- and -\/,
+     * Validation - has implementations: Success and Failure
+     *
+     * \/  is a monad - first fail stops calculations in chain of flatMap (for-comprehension)
+     * Validation is applicative - any fail will contribute to common error result.
+     */
+
+    def validationSuccess[Err, Suc](t: Suc): Validation[Err, Suc] = t.success[Err]
+    def validationFailure[Err, Suc](err: Err): Validation[Err, Suc] = err.failure[Suc]
+
+    def validation = (
+        "1".success[String] |@|
+        "2".failure[String] |@|
+        "3".failure[String]) (_ + _ + _)  // Failure("23")
+
+    /**
+     * The problem with this validation is that error is glued together - we'd prefer a list
+     *
+     * Nel - NotEmptyList
+     */
+    def validationNel = (
+        "1".successNel[String] |@|
+        "2".failureNel[String] |@|
+        "3".failureNel[String]) (_ + _ + _)  // Failure(NonEmptyList( "2", "3"))
+
+  }
+
 }
 
