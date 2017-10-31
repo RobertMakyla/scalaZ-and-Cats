@@ -147,20 +147,20 @@ object ScalaZPlayground {
     // shitty cause it takes only 2 arguments
     def applicativeOldStyle =  ^(3.some, 5.some) (_ + _) // Some(8)
 
-    // ScalaZ applicative builder
-    def applicativeValidation = (3.some |@| 5.some) (_ + _) // Some(8)
+    // ScalaZ applicative builder - can chain many Validations
+    def applicativeValidation = (3.some |@| 5.some |@| 0.some) (_ + _ + _) // Some(8)
 
     /**
      * Validation is similar to \/ cause :
      * \/         - has implementations: \/- and -\/,
      * Validation - has implementations: Success and Failure
      *
-     * \/  is a monad - first fail stops calculations in chain of flatMap (for-comprehension)
+     * \/         is monad       - first fail stops calculations in chain of flatMap (for-comprehension)
      * Validation is applicative - any fail will contribute to common error result.
      */
 
-    def validationSuccess[Err, Suc](t: Suc): Validation[Err, Suc] = t.success[Err]
-    def validationFailure[Err, Suc](err: Err): Validation[Err, Suc] = err.failure[Suc]
+    def validationSuccess[Err, Suc](t: Suc): Validation[Err, Suc] = Success[Suc](t) // or t.success[Err]
+    def validationFailure[Err, Suc](err: Err): Validation[Err, Suc] = Failure[Err](err) // or err.failure[Suc]
 
     def validation = (
         "1".success[String] |@|
@@ -176,6 +176,33 @@ object ScalaZPlayground {
         "1".successNel[String] |@|
         "2".failureNel[String] |@|
         "3".failureNel[String]) (_ + _ + _)  // Failure(NonEmptyList( "2", "3"))
+
+    /**
+     * Real example:
+     */
+    case class TestApp(
+      config: Map[String, String] // or ConfigFactory.load(s"conf/${hostName.value}")
+    ) {
+
+      private def optional(property: String): ValidationNel[String, Option[String]] =
+        (config.get(property): Option[String]).success
+
+      private def required(property: String): ValidationNel[String, String] =
+        (config.get(property): Option[String]).toSuccess(s"property $property not set").toValidationNel
+
+      private val maybeProp1: ValidationNel[String, Option[String]] = optional("1")
+      private val maybeProp2: ValidationNel[String, Option[String]] = optional("2")
+      private val prop3: ValidationNel[String, String] = required("3")
+
+      val partialConfig: Validation[NonEmptyList[String], PartialConfig] =
+        (maybeProp1 |@| maybeProp2 |@| prop3) (PartialConfig.apply)
+      /* PartialConfig.apply takes Strings (or Option[String]) and returns Config file - or list of failures */
+
+      //val appConfig = (partialConfig |@| jms |@| db |@| others )(AppConfig.apply)
+      // /* AppConfig.apply  takes different configs and return App Config*/
+
+    }
+    case class PartialConfig(maybeProp1: Option[String], maybeProp2: Option[String], prop3: String)
 
   }
 

@@ -82,6 +82,16 @@ class ScalaZPlaygroundSpec extends FreeSpec with MustMatchers {
         validationNel mustBe Failure(NonEmptyList( "2", "3"))
       }
 
+      "Real app example with Validation" in {
+        TestApp(Map("1" -> "one", "2" -> "two", "3" -> "three")).partialConfig mustBe
+          Success[PartialConfig](PartialConfig("one".some, "two".some, "three"))
+
+        TestApp(Map("1" -> "one", "3" -> "three")).partialConfig mustBe
+          Success[PartialConfig](PartialConfig("one".some, None, "three"))
+
+        TestApp(Map("1" -> "one", "2" -> "two")).partialConfig mustBe
+          Failure[NonEmptyList[String]](NonEmptyList("property 3 not set"))
+      }
     }
 
     "Useful Monadic functions" in {
