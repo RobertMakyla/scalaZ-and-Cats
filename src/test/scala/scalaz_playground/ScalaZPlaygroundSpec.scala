@@ -109,6 +109,33 @@ class ScalaZPlaygroundSpec extends FreeSpec with MustMatchers {
 
     }
 
+    "Monad Transformers" in {
+      import ScalaZPlayground.MonadTransformers._
+
+      /** Ugly nesting */
+      {
+        for {
+          o1: Option[Int] <- List(1.some, 2.some)
+          o2: Option[Int] <- List(100.some)
+        } yield for {
+          i1: Int <- o1
+          i2: Int <- o2
+        } yield i1 + i2
+      } mustBe List(101.some, 102.some)
+
+      /** De-nested */
+      {
+        val result = for {
+          i1 <- OptionT(List(1.some, 2.some))
+          i2 <- OptionT(List(100.some))
+        } yield i1 + i2
+        result.run mustBe List(101.some, 102.some)
+      }
+
+      isDefinedOptionT mustBe List(true, true)
+      isRightEitherT mustBe true.some
+      isLeftEitherT mustBe false.some
+    }
   }
 
 }

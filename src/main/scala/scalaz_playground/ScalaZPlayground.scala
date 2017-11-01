@@ -1,7 +1,7 @@
 package scalaz_playground
 
-import scalaz.Scalaz._
 import scalaz._
+import Scalaz._
 
 object ScalaZPlayground {
 
@@ -221,5 +221,67 @@ object ScalaZPlayground {
     // List( List(1), List(2), List(3), List(1,2), List(2,3), List(1,3), List(1,2,3), Nil )
 
   }
+
+  object MonadTransformers {
+
+    /** Useful with stacked Monads: M[N[A]] (where M and N are Monads)
+     *
+     * for 2 things :
+     *
+     * DE-NESTING: When you have 2 nested for-comprehensions, you might want to use Monad Transformers for clarity
+     * TRANSFORMING: (eg List[Option] to have functionaliy of Option[List] )
+     */
+
+    // De-NESTING
+
+    def ls1: List[Option[Int]] = List(1.some,2.some)  // .some is nicer than Some() cause it returns type Option, not Some
+    def ls2: List[Option[Int]] = List(100.some)
+
+    def stackedMonadsUglyNested: List[Option[Int]] = for {
+      o1: Option[Int] <- ls1
+      o2: Option[Int] <- ls2
+    } yield for {
+      i1: Int <- o1
+      i2: Int <- o2
+    } yield i1 + i2 // List(101.some, 102.some)
+
+    /**
+     * OptionT()  - takes argument M[Option[A]]  (eg List[Option] )
+     * EitherT()  - takes argument M[Either[A]]
+     */
+    def stackedMonadsDeNested: List[Option[Int]] = {
+      val result: OptionT[List, Int] = for {
+        i1: Int <- OptionT(ls1)
+        i2: Int <- OptionT(ls2)
+      } yield i1 + i2
+      result.run // run zwraca typ początkowy - ten który wrzucaliśmy do OptionT( ... )
+    }
+
+    // TRANSFORMING
+
+    /**
+     * List[Option] --> OptionT[List, Int]
+     *
+     * and this has all functionality of Option:
+     *
+     * OptionT[List, Int].isDefined  ---> List[Boolean]
+     */
+
+    val listOfOptions: List[Option[Int]] = List(1.some, 2.some)
+    val optionT_of_list: OptionT[List, Int] = OptionT(listOfOptions)
+    def isDefinedOptionT: List[Boolean] = optionT_of_list.isDefined // List(true, true)
+
+    /**
+     * Option[Either[String, Int]] --> EitherT[Option, String, Int]
+     *
+     * and this has all functionality of Either:
+     */
+    val optionOfEither: Option[\/[String, Int]] = 1.right[String].some
+    val eitherT_of_option: EitherT[Option, String, Int] = EitherT(optionOfEither)
+
+    def isRightEitherT: Option[Boolean] = eitherT_of_option.isRight // true
+    def isLeftEitherT: Option[Boolean] = eitherT_of_option.isLeft // false
+  }
+
 }
 
