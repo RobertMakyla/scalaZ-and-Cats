@@ -61,7 +61,7 @@ object ScalaZPlayground {
      */
   }
 
-  object FunctorApplicativeMonad{
+  object Functors{
     /** Just a reminder what is functor:
      *
      *  trait Functor[A] {

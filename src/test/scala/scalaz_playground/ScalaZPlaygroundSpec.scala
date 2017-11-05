@@ -35,7 +35,7 @@ class ScalaZPlaygroundSpec extends FreeSpec with MustMatchers {
   }
 
   "Functor, Applicative, Monad" - {
-    import ScalaZPlayground.FunctorApplicativeMonad._
+    import ScalaZPlayground.Functors._
 
     "functor for tuples" in {
       functorForTuple mustBe ((1, 2, 300))
