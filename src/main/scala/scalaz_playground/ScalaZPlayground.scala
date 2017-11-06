@@ -285,6 +285,72 @@ object ScalaZPlayground {
     def isRightEitherT: Option[Boolean] = eitherT_of_option.isRight // true
     def isLeftEitherT: Option[Boolean] = eitherT_of_option.isLeft // false
   }
-//now day 11 - Lens
+
+  object Lenses {
+
+    /**
+     * Lenses - for updating immutable complex, nested structures
+     */
+
+    case class TheName(value: String)
+    case class Person(name: TheName)
+    case class Contract(person: Person)
+
+    val johnsContract = Contract(Person(TheName("John")))
+
+    val newContract =
+      johnsContract.copy(
+        person = johnsContract.person.copy(
+          name = johnsContract.person.name.copy(
+            value = "NewSomeone"
+          )))
+
+    /**
+     * imperative way for mutable fields:
+     *
+     *  a.b.c.d.e += 1
+     *
+     * functional way if we want to keep immutability (too much boilerplate)
+     *
+     * a.copy(
+     *   b = a.b.copy(
+     *     c = a.b.c.copy(
+     *       d = a.b.c.d.copy(
+     *         e = a.b.c.d.e + 1
+     * ))))
+     *
+     */
+
+    //defining lenses
+
+    val contactsPerson = Lens.lensu[Contract, Person](
+      (a, value) => a.copy(person = value),
+      _.person
+    )
+    val personsName = Lens.lensu[Person, TheName](
+      (a, value) => a.copy(name = value),
+      _.name
+    )
+    val namesValue = Lens.lensu[TheName, String](
+      (a, value) => a.copy(value = value),
+      _.value
+    )
+
+    // using lenses
+
+    val fromContactToNameValue = contactsPerson >=> personsName >=> namesValue // shortcut all the way Contract-to-String
+    fromContactToNameValue.get(johnsContract) // "John"
+    fromContactToNameValue.set(johnsContract, "James") // Whole Contact with James
+
+    /**
+     * The End word:
+     *
+     * Using ScalaZ lens is complex - there's a lot to define before we can use it ..
+     * however it can still save our ass ..
+     *
+     * much simpler are quicklenses from softwaremill ..
+     */
+  }
+
 }
 

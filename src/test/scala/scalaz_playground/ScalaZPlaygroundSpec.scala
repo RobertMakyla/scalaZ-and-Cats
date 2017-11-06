@@ -136,6 +136,13 @@ class ScalaZPlaygroundSpec extends FreeSpec with MustMatchers {
       isRightEitherT mustBe true.some
       isLeftEitherT mustBe false.some
     }
+
+    "Lens" in {
+      import ScalaZPlayground.Lenses._
+
+      fromContactToNameValue.get(johnsContract) mustBe "John"
+      fromContactToNameValue.set(johnsContract, "James") mustBe Contract(Person(TheName("James")))
+    }
   }
 
 }
