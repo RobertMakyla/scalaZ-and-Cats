@@ -352,5 +352,11 @@ object ScalaZPlayground {
      */
   }
 
+  /**
+   * Other stuff:
+   *
+   * Arrow - scalaZ abstraction for Function1[A,B], PartialFunction1[A,B], Kleisli [F[_], A]
+   *
+   */
 }
 
