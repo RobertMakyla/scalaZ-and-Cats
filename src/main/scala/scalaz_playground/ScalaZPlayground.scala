@@ -228,11 +228,14 @@ object ScalaZPlayground {
      *
      * for 2 things :
      *
-     * DE-NESTING: When you have 2 nested for-comprehensions, you might want to use Monad Transformers for clarity
-     * TRANSFORMING: (eg List[Option] to have functionaliy of Option[List] )
+     * DE-NESTING TO REDUCE BOILERPLATE:
+     *    When you have 2 nested for-comprehensions, you might want to use Monad Transformers for clarity
+     *
+     * TRANSFORMING:
+     *    (eg List[Option] to have functionaliy of Option[List] )
      */
 
-    // De-NESTING
+    // De-NESTING TO REDUCE BOILERPLATE
 
     def ls1: List[Option[Int]] = List(1.some,2.some)  // .some is nicer than Some() cause it returns type Option, not Some
     def ls2: List[Option[Int]] = List(100.some)
@@ -282,6 +285,6 @@ object ScalaZPlayground {
     def isRightEitherT: Option[Boolean] = eitherT_of_option.isRight // true
     def isLeftEitherT: Option[Boolean] = eitherT_of_option.isLeft // false
   }
-
+//now day 11 - Lens
 }
 
