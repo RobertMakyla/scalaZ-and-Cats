@@ -143,6 +143,23 @@ class ScalaZPlaygroundSpec extends FreeSpec with MustMatchers {
       fromContactToNameValue.get(johnsContract) mustBe "John"
       fromContactToNameValue.set(johnsContract, "James") mustBe Contract(Person(TheName("James")))
     }
+
+    "Memo" in {
+      import ScalaZPlayground.Memorization._
+
+      val i = 35
+
+      val start1 = System.currentTimeMillis()
+      val result1 = slowFibonacci(i)
+      val end1 = System.currentTimeMillis()
+      println(s"slow fibonacci($i) [millis]: " + end1.-(start1))
+
+      val start2 = System.currentTimeMillis()
+      val result2 = fastFibonacci(i)
+      val end2 = System.currentTimeMillis()
+      println(s"fast fibonacci($i) [millis]: " + end2.-(start2))
+    }
+
   }
 
 }

@@ -358,5 +358,31 @@ object ScalaZPlayground {
    * Arrow - scalaZ abstraction for Function1[A,B], PartialFunction1[A,B], Kleisli [F[_], A]
    *
    */
+
+  object Memorization {
+
+    /**
+     * Memo - wrapping slow function (eg recursive function).
+     * It gives result much faster by caching some results in RAM - it's called MEMORIZATION.
+     *
+     * sealed trait Memo{
+     * def apply(z: K => V): K => V
+     * }
+     *
+     */
+    val slowFibonacci: Int => Int = {
+      case 0 => 0
+      case 1 => 1
+      case n => slowFibonacci(n - 2) + slowFibonacci(n - 1)
+    }
+
+
+    val fastFibonacci: Int => Int = Memo.mutableHashMapMemo {
+      case 0 => 0
+      case 1 => 1
+      case n => fastFibonacci(n - 2) + fastFibonacci(n - 1)
+    }
+  }
+
 }
 
