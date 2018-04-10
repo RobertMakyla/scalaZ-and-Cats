@@ -384,5 +384,48 @@ object ScalaZPlayground {
     }
   }
 
+  object IO_Monad {
+    import scalaz._, Scalaz._, effect._, IO._
+
+    def sideEffectGiving1: IO[Int] = IO{
+      println(s"I will now return 1") // side effect
+      1
+    }
+
+    def sideEffectMultiplyBy10(n: Int): IO[Int] = IO {
+      println(s"I will now multiply $n by 10") // side effect
+      n * 10
+    }
+
+    val sideEffect100: IO[Int] = for { // sideEffect100.unsafePerformIO()  -->  100
+      one <- sideEffectGiving1
+      ten <- sideEffectMultiplyBy10(one)
+      hundred <- sideEffectMultiplyBy10(ten)
+    } yield hundred
+
+    /**
+     * Pros:
+     * - guarantee of sequencial execution (of side effects/mutations)
+     * - MODULARITY - as it's monad we can compose many IOMonads
+     */
+
+    val sideEffect300 = for {
+      hundred_1 <- sideEffect100
+      hundred_2 <- sideEffect100
+      hundred_3 <- sideEffect100
+    } yield hundred_1 + hundred_2 + hundred_3
+
+    /**
+     * Cons - no guarantee that we will ever return from IO Monad execution
+     */
+
+    /**
+     * Conclusion
+     *
+     * Instead of using IO effects everywhere in code, we can separate IO code from the one with no effects.
+     * => like this, we can be more sure about the code with no effects
+     * => like this, we can still compose IO code in FP way - into sequences of operations
+     */
+  }
 }
 

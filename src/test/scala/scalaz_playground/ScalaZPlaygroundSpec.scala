@@ -160,6 +160,13 @@ class ScalaZPlaygroundSpec extends FreeSpec with MustMatchers {
       println(s"fast fibonacci($i) [millis]: " + end2.-(start2))
     }
 
+    "IO Monad" in {
+      import ScalaZPlayground.IO_Monad._
+
+      sideEffect100.unsafePerformIO() mustBe 100
+      sideEffect300.unsafePerformIO() mustBe 300
+    }
+
   }
 
 }
