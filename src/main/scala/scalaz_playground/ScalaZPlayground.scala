@@ -409,11 +409,8 @@ object ScalaZPlayground {
      * - MODULARITY - as it's monad we can compose many IOMonads
      */
 
-    val sideEffect300 = for {
-      hundred_1 <- sideEffect100
-      hundred_2 <- sideEffect100
-      hundred_3 <- sideEffect100
-    } yield hundred_1 + hundred_2 + hundred_3
+    // You can use |+| instead of for-comprehension, if IO's don't escalate values
+    val sideEffect300 = sideEffect100 |+| sideEffect100 |+| sideEffect100
 
     /**
      * Cons - no guarantee that we will ever return from IO Monad execution
