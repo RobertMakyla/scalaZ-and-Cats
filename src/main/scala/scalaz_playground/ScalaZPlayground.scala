@@ -178,7 +178,7 @@ object ScalaZPlayground {
         "3".failureNel[String]) (_ + _ + _)  // Failure(NonEmptyList( "2", "3"))
 
     /**
-     * Real example:
+     * Validation Applicative - Real example:
      */
     case class TestApp(
       config: Map[String, String] // or ConfigFactory.load(s"conf/${hostName.value}")
