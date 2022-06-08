@@ -6,8 +6,8 @@ import org.scalatest.{FreeSpec, MustMatchers}
 class CatsPlaygroundSpec extends FreeSpec with MustMatchers{
 
   "Cats Playground" - {
-    "Monoid Test" in {
-      import cats_playground.CatsPlayground.Monoid_Test._
+    "SemiGroup and Monoid" in {
+      import cats_playground.CatsPlayground.SemiGroup_and_Monoid._
       import cats.implicits._
 
       myCombine(List(1, 2, 3, 4)) mustBe 10

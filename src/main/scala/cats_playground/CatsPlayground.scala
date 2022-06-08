@@ -15,10 +15,10 @@ object CatsPlayground {
    * Semigroup - type T + associative operation |+|
    * Monoid    - type T + associative operation + identity element (empty element)
    * Group     - type T + associative operation + identity element (empty element)
-   * + invertibility (for each element 'a: T' there is another 'b:T' for which op(a,b) == zero element
+   *              + invertibility (for each element 'a: T' there is another 'b:T' for which op(a,b) == zero element
    */
 
-  object Monoid_Test {
+  object SemiGroup_and_Monoid {
 
     import cats.Semigroup
     import cats.implicits._
