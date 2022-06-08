@@ -4,7 +4,7 @@ version := "1.0"
 scalaVersion := "2.11.2"
 
 val scalazVersion = "7.1.0"
-
+val catsVersion = "2.0.0"
 libraryDependencies ++= {
   val scalaTestVersion  = "3.0.1"
   val scalaCheckVersion = "1.13.4"
@@ -15,7 +15,8 @@ libraryDependencies ++= {
     "org.scalaz" %% "scalaz-core" % scalazVersion,
     "org.scalaz" %% "scalaz-effect" % scalazVersion,
     "org.scalaz" %% "scalaz-typelevel" % scalazVersion,
-    "org.scalaz" %% "scalaz-scalacheck-binding" % scalazVersion % "test"
+    "org.scalaz" %% "scalaz-scalacheck-binding" % scalazVersion % "test",
+    "org.typelevel" %% "cats-core" % catsVersion
 
   )
 }
