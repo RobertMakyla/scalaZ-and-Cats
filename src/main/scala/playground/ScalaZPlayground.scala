@@ -1,4 +1,4 @@
-package scalaz_playground
+package playground
 
 import scalaz._
 import Scalaz._

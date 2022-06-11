@@ -1,4 +1,4 @@
-package scalaz_playground
+package playground
 
 import org.scalatest.{FreeSpec, MustMatchers}
 
@@ -8,7 +8,7 @@ import Scalaz._
 class ScalaZPlaygroundSpec extends FreeSpec with MustMatchers {
 
   "Comparing, Showing instances" - {
-    import ScalaZPlayground.ComparingInstances._
+    import playground.ScalaZPlayground.ComparingInstances._
 
     "Equals - verifies type at compile-time, while scala's == always compiles..." in {
       equalTypeUnsafe(1, "") mustBe false // very risky thing that it actually compiles
@@ -35,7 +35,7 @@ class ScalaZPlaygroundSpec extends FreeSpec with MustMatchers {
   }
 
   "Functor, Applicative, Monad" - {
-    import ScalaZPlayground.Functors._
+    import playground.ScalaZPlayground.Functors._
 
     "functor for tuples" in {
       functorForTuple mustBe ((1, 2, 300))
@@ -51,7 +51,7 @@ class ScalaZPlaygroundSpec extends FreeSpec with MustMatchers {
     }
 
     "Semigroups Monoids Groups" in {
-      import ScalaZPlayground.SemigroupsMonoidsGroups._
+      import playground.ScalaZPlayground.SemigroupsMonoidsGroups._
 
       semigroupOperator(List(1,2,3), List(4,5,6)) mustBe List(1,2,3,4,5,6)
 
@@ -64,13 +64,13 @@ class ScalaZPlaygroundSpec extends FreeSpec with MustMatchers {
     }
 
     "Monoid of Option" in {
-      import ScalaZPlayground.SemigroupsMonoidsGroups.optionMonoid
+      import playground.ScalaZPlayground.SemigroupsMonoidsGroups.optionMonoid
 
       1.some |+| 1.some |+| None |+| 1.some |+| None mustBe Some(3)
     }
 
     "ApplicativeBuilder with Validation" - {
-      import ScalaZPlayground.ApplicativeBuilderWithValidation._
+      import playground.ScalaZPlayground.ApplicativeBuilderWithValidation._
 
       "applicative" in {
         applicativeOldStyle mustBe Some(8)
@@ -95,7 +95,7 @@ class ScalaZPlaygroundSpec extends FreeSpec with MustMatchers {
     }
 
     "Useful Monadic functions" in {
-      import ScalaZPlayground.UsefulMonadicFunctions._
+      import playground.ScalaZPlayground.UsefulMonadicFunctions._
 
       (Some(9.some): Option[Option[Int]]).join mustBe 9.some
 
@@ -110,7 +110,7 @@ class ScalaZPlaygroundSpec extends FreeSpec with MustMatchers {
     }
 
     "Monad Transformers" in {
-      import ScalaZPlayground.MonadTransformers._
+      import playground.ScalaZPlayground.MonadTransformers._
 
       /** Ugly nesting */
       {
@@ -138,14 +138,14 @@ class ScalaZPlaygroundSpec extends FreeSpec with MustMatchers {
     }
 
     "Lens" in {
-      import ScalaZPlayground.Lenses._
+      import playground.ScalaZPlayground.Lenses._
 
       fromContactToNameValue.get(johnsContract) mustBe "John"
       fromContactToNameValue.set(johnsContract, "James") mustBe Contract(Person(TheName("James")))
     }
 
     "Memo" in {
-      import ScalaZPlayground.Memorization._
+      import playground.ScalaZPlayground.Memorization._
 
       val i = 35
 
@@ -161,7 +161,7 @@ class ScalaZPlaygroundSpec extends FreeSpec with MustMatchers {
     }
 
     "IO Monad" in {
-      import ScalaZPlayground.IO_Monad._
+      import playground.ScalaZPlayground.IO_Monad._
 
       sideEffect100.unsafePerformIO() mustBe 100
       sideEffect300.unsafePerformIO() mustBe 300

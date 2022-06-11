@@ -1,10 +1,53 @@
-package cats_playground
+package playground
 
 object CatsPlayground {
 
   object Simple {
-    // Show
-    //Equal
+    /**
+     Equal  === and =!=
+     The compiler will scream if the types are different:
+
+     1 == true - Scala wil just warn you that types are different
+     1 === true - Cats will cause  compiler error
+     */
+
+    /*
+     Equal - How it's done in CATS
+     */
+    case class Person(name: String, age: Int)
+
+    trait MyEq[A] {
+      def ===(a: A, b: A) : Boolean
+      def =!=(a: A, b: A) : Boolean
+    }
+
+    implicit val eqPerson = new MyEq[Person] {
+      def ===(a1: Person, a2: Person): Boolean = a1.name == a2.name && a1.age == a2.age
+      def =!=(a1: Person, a2: Person): Boolean = a1.name != a2.name || a1.age != a2.age
+    }
+
+    implicit class MyEqOps[A](p: A)(implicit ev: MyEq[A]) {
+      def ===(a: A) = ev.===(a, p)
+      def =!=(a: A) = ev.=!=(a, p)
+    }
+
+    def equalTypeSafeForPerson(a: Person, b: Person): Boolean = a === b
+
+    /**
+     * Order - fails compilation if types don't match (eg Int and Double)
+     *
+     * compare
+     * max
+     */
+
+    /**
+     * Show  - gives us function show: String
+     *
+     * Q: why use it when we have toString ?
+     * A: toString works even when we don't have it implemented - printing the adress of an instance in memory - we don't want that
+     * Using .show we are sure that the way t rint it is actually implemented !
+     */
+
   }
 
 
@@ -15,7 +58,7 @@ object CatsPlayground {
    * Semigroup - type T + associative operation |+|
    * Monoid    - type T + associative operation + identity element (empty element)
    * Group     - type T + associative operation + identity element (empty element)
-   *              + invertibility (for each element 'a: T' there is another 'b:T' for which op(a,b) == zero element
+   * + invertibility (for each element 'a: T' there is another 'b:T' for which op(a,b) == zero element
    */
 
   object SemiGroup_and_Monoid {
@@ -24,7 +67,7 @@ object CatsPlayground {
     import cats.implicits._
 
     /**
-     * Example: I can use Monoids (implemented type classes) to collaps/merge/combine all types of data
+     * Why use Monoid ? : I can use Monoids (implemented type classes) to collaps/merge/combine all types of data
      */
     trait Monoid[A] {
       def combine(a1: A, a2: A): A
