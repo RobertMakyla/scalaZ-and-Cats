@@ -169,13 +169,14 @@ object CatsPlayground {
      * Effects are being run in parallel and they are combined when we have all the results
      */
 
-    val res: Option[Int] = (1.some, 2.some, 3.some, 4.some ).mapN(_ + _ + _ + _)
+    def processResults(a: Int, b: Int, c: Int, d: Int) = a + b + c + d
 
+    val res: Option[Int] = (1.some, 2.some, 3.some, 4.some) mapN processResults
   }
 
   //todo monads
 
-  //todo traverse
+  //todo traverse/sequence/flatTraverse
 
   //todo monad transformers OptionT, FutureT, EitherT
 }
