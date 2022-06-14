@@ -2,6 +2,10 @@ package playground
 
 object CatsPlayground {
 
+  object Utils {
+    val someException = new Exception("error")
+  }
+
   object Simple {
     /**
      Equal  === and =!=
@@ -123,6 +127,7 @@ object CatsPlayground {
   }
 
   object Functor_Test {
+    import Utils._
     import scala.util.{Failure, Success, Try}
 
     /** Functor - something which has .map(A -> B):
@@ -147,7 +152,6 @@ object CatsPlayground {
      * Why use Functors ? They compose, so we can use it to apply MAP of complex nested structures:
      */
 
-    val someException = new Exception("error")
     val httpResponses: List[Option[Try[Int]]] = List(Some(Success(200)), None, Some(Failure(someException)))
 
     val mappedData = listFunctor
@@ -157,6 +161,15 @@ object CatsPlayground {
   }
 
   object Applicative_Test {
+    import cats.implicits._
+    import cats.syntax.semigroupal._
+
+    /**
+     * Applicatives are perfect for combining all results of independent EFFECTS
+     * Effects are being run in parallel and they are combined when we have all the results
+     */
+
+    val res: Option[Int] = (1.some, 2.some, 3.some, 4.some ).mapN(_ + _ + _ + _)
 
   }
 

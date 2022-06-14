@@ -3,9 +3,11 @@ package playground
 import cats.{Functor, Semigroup}
 import org.scalatest.{FreeSpec, MustMatchers}
 
-import scala.util.{Failure, Success, Try}
+import scala.concurrent.Future
+import scala.util.{Failure, Success}
+import org.scalatest.concurrent.ScalaFutures
 
-class CatsPlaygroundSpec extends FreeSpec with MustMatchers{
+class CatsPlaygroundSpec extends FreeSpec with MustMatchers with ScalaFutures {
 
   "Cats Playground" - {
     "Simple stuff" in {
@@ -31,11 +33,24 @@ class CatsPlaygroundSpec extends FreeSpec with MustMatchers{
     }
     "Functor" in {
       import CatsPlayground.Functor_Test._
+      import CatsPlayground.Utils._
 
       Functor[Option].map(Option("Hello"))(_.length) mustBe Some(5)
       Functor[Option].map(None: Option[String])(_.length) mustBe None
 
       mappedData mustBe List(Some(Success("ok")), None, Some(Failure(someException)))
+    }
+    "Applicatives" in {
+      import CatsPlayground.Applicative_Test._
+      import CatsPlayground.Utils._
+
+      import cats.syntax.semigroupal._
+      import cats.implicits._
+      import scala.concurrent.ExecutionContext.Implicits.global
+
+      //happy path
+      (1.some, 2.some, 3.some, 4.some ).mapN(_ + _ + _ + _) mustBe Some(10)
+      (Future.successful(1), Future.successful(1) ).mapN(_ + _).futureValue mustBe 2
     }
   }
 }
