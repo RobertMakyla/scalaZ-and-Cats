@@ -48,6 +48,16 @@ object CatsPlayground {
      * Using .show we are sure that the way t rint it is actually implemented !
      */
 
+    import cats.Show
+    import cats.implicits._
+
+    case class Car(color: String)
+
+    implicit val showPerson = new Show[Car] {
+      override def show(t: Car): String = s"Car(${t.color.toUpperCase})"
+    }
+    // ShowOps are imported from     import cats.implicits._
+    Car("red").show
   }
 
 

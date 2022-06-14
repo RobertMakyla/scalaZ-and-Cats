@@ -8,8 +8,13 @@ class CatsPlaygroundSpec extends FreeSpec with MustMatchers{
   "Cats Playground" - {
     "Simple stuff" in {
       import CatsPlayground.Simple._
+      import cats.implicits._
 
+      //Equal
       equalTypeSafeForPerson(Person("rob", 23), Person("mike", 23)) mustBe false
+
+      //Show
+      Car("blue").show mustBe "Car(BLUE)"
     }
     "SemiGroup and Monoid" in {
       import playground.CatsPlayground.SemiGroup_and_Monoid._
