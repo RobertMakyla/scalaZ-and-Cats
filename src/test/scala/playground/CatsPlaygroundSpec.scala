@@ -1,7 +1,9 @@
 package playground
 
-import cats.Semigroup
+import cats.{Functor, Semigroup}
 import org.scalatest.{FreeSpec, MustMatchers}
+
+import scala.util.{Failure, Success, Try}
 
 class CatsPlaygroundSpec extends FreeSpec with MustMatchers{
 
@@ -26,6 +28,14 @@ class CatsPlaygroundSpec extends FreeSpec with MustMatchers{
 
       semigroupOperator(1, 2) mustBe 3
       addingIdentityToMonoid(666) mustBe 666
+    }
+    "Functor" in {
+      import CatsPlayground.Functor_Test._
+
+      Functor[Option].map(Option("Hello"))(_.length) mustBe Some(5)
+      Functor[Option].map(None: Option[String])(_.length) mustBe None
+
+      mappedData mustBe List(Some(Success("ok")), None, Some(Failure(someException)))
     }
   }
 }

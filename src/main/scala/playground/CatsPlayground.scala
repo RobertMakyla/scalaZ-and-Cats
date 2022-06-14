@@ -122,4 +122,47 @@ object CatsPlayground {
     def addingIdentityToMonoid[T: Semigroup](t: T)(implicit ev: Monoid[T]): T = t |+| ev.empty
   }
 
+  object Functor_Test {
+    import scala.util.{Failure, Success, Try}
+
+    /** Functor - something which has .map(A -> B):
+     *
+     *  trait Functor[A] {
+     *     def map[B](f: A => B): Functor[B]
+     *  }
+     */
+    import cats._
+
+    implicit val listFunctor = new Functor[List] {
+      def map[A, B](fa: List[A])(f: A => B) = fa map f
+    }
+    implicit val optionFunctor: Functor[Option] = new Functor[Option] {
+      def map[A, B](fa: Option[A])(f: A => B) = fa map f
+    }
+    implicit val tryFunctor = new Functor[Try] {
+      def map[A, B](fa: Try[A])(f: A => B): Try[B] = fa map f
+    }
+
+    /**
+     * Why use Functors ? They compose, so we can use it to apply MAP of complex nested structures:
+     */
+
+    val someException = new Exception("error")
+    val httpResponses: List[Option[Try[Int]]] = List(Some(Success(200)), None, Some(Failure(someException)))
+
+    val mappedData = listFunctor
+      .compose(optionFunctor)
+      .compose(tryFunctor)
+      .map(httpResponses)(code => if (code == 200) "ok" else "error")
+  }
+
+  object Applicative_Test {
+
+  }
+
+  //todo monads
+
+  //todo traverse
+
+  //todo monad transformers OptionT, FutureT, EitherT
 }
