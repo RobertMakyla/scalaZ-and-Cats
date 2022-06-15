@@ -1,5 +1,7 @@
 package playground
 
+
+
 import scala.util.Try
 
 object CatsPlayground {
@@ -213,7 +215,13 @@ object CatsPlayground {
     // sequenced: Option[List[Int]] = None
   }
 
-  //todo monads
+  object Monad_Test {
+    import cats._
+    import cats.implicits._
+
+    Monad[Option].pure(42) // Some(42)
+    Monad[List].flatMap(List(1,2,3))(e => List(e, e)) // List(1,1,2,2,3,3)
+  }
 
   //todo monad transformers OptionT, FutureT, EitherT
 }

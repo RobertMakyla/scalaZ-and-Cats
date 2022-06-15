@@ -64,5 +64,12 @@ class CatsPlaygroundSpec extends FreeSpec with MustMatchers with ScalaFutures {
       val users = List(User("a"), User("b"), User("c"))
       updateUsers(users) mustBe Success(users)
     }
+    "Monads" in {
+      import cats._
+      import cats.implicits._
+
+      Monad[Option].pure(42) mustBe Some(42)
+      Monad[List].flatMap(List(1,2,3))(e => List(e, e)) mustBe List(1,1,2,2,3,3)
+    }
   }
 }
