@@ -1,10 +1,10 @@
 package playground
 
-import cats.{Functor, Semigroup}
+import cats.Functor
 import org.scalatest.{FreeSpec, MustMatchers}
 
 import scala.concurrent.Future
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try}
 import org.scalatest.concurrent.ScalaFutures
 
 class CatsPlaygroundSpec extends FreeSpec with MustMatchers with ScalaFutures {
@@ -49,8 +49,20 @@ class CatsPlaygroundSpec extends FreeSpec with MustMatchers with ScalaFutures {
       import scala.concurrent.ExecutionContext.Implicits.global
 
       //happy path
-      (1.some, 2.some, 3.some, 4.some ).mapN(_ + _ + _ + _) mustBe Some(10)
+      def add4Ints(a: Int, b: Int, c: Int, d: Int) = a + b + c + d
+
+      (1.some, 2.some, 3.some, 4.some ).mapN(add4Ints) mustBe Some(10)
       (Future.successful(1), Future.successful(1) ).mapN(_ + _).futureValue mustBe 2
+    }
+    "Traverse, Sequence" in {
+      import CatsPlayground.Traverse_Sequence._
+      import CatsPlayground.Utils._
+      import cats._, cats.syntax.all._
+      import cats.Applicative
+      import cats.instances.future._
+
+      val users = List(User("a"), User("b"), User("c"))
+      updateUsers(users) mustBe Success(users)
     }
   }
 }

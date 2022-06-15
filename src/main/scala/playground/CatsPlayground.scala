@@ -1,5 +1,7 @@
 package playground
 
+import scala.util.Try
+
 object CatsPlayground {
 
   object Utils {
@@ -165,18 +167,46 @@ object CatsPlayground {
     import cats.syntax.semigroupal._
 
     /**
-     * Applicatives are perfect for combining all results of independent EFFECTS
+     * Applicatives are perfect for combining all results of INDEPENDENT EFFECTS
      * Effects are being run in parallel and they are combined when we have all the results
      */
 
-    def processResults(a: Int, b: Int, c: Int, d: Int) = a + b + c + d
+    def add4Ints(a: Int, b: Int, c: Int, d: Int) = a + b + c + d
 
-    val res: Option[Int] = (1.some, 2.some, 3.some, 4.some) mapN processResults
+    val res: Option[Int] = (1.some, 2.some, 3.some, 4.some) mapN add4Ints
+  }
+
+  object Traverse_Sequence {
+    /**
+     * Traverse is like a map, M[A].map(A => N[A]) - it applies a new type of monad on each element, and then inverts the monads inside-out
+     *
+     * So let's say we are DB updating a list of As ... Traverse is perfect for this:
+     * List[A].traverse(A => Future[A])  gives us Future[List[A]]
+     *
+     * Sequence - applying identity function to traverse - just inverting the monads inside out !
+     */
+
+    import cats._, cats.syntax.all._
+    import cats.Applicative
+    import cats.instances.future._
+
+    case class User(name: String)
+
+    def updateUser(u: User): Try[User] = Try(u)
+    def updateUsers(us: List[User]): Try[List[User]] = us.traverse(updateUser)
+
+    /**
+     */
+    val list: List[Option[Int]] = List(Some(1), Some(2), None)
+
+    val traversed: Option[List[Int]] = list.traverse(identity)
+    // traversed: Option[List[Int]] = None
+
+    val sequenced: Option[List[Int]] = list.sequence  //it's the same
+    // sequenced: Option[List[Int]] = None
   }
 
   //todo monads
-
-  //todo traverse/sequence/flatTraverse
 
   //todo monad transformers OptionT, FutureT, EitherT
 }
