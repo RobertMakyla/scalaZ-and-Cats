@@ -9,6 +9,13 @@ object CatsPlayground {
   }
 
   object Simple {
+    /*
+      Some(1) - gives type Some[Int]
+      1.some  - gives type Option[Int] - much better
+    */
+    import cats.implicits._
+    val res: Option[Int] = 1.some
+
     /**
      Equal  === and =!=
      The compiler will scream if the types are different:
