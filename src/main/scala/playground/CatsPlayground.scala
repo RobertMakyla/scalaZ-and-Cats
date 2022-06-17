@@ -141,11 +141,13 @@ object CatsPlayground {
     import Utils._
     import scala.util.{Failure, Success, Try}
 
-    /** Functor - something which has .map(A -> B):
+    /** Functor - something which has .map(A => B):
      *
      *  trait Functor[A] {
      *     def map[B](f: A => B): Functor[B]
      *  }
+     *
+     *  Endofunctors: Functors with simple map(A=>B) is actually ENDOFUNCTORs - A & B are the same category of types !
      */
     import cats._
 
@@ -223,5 +225,5 @@ object CatsPlayground {
     Monad[List].flatMap(List(1,2,3))(e => List(e, e)) // List(1,1,2,2,3,3)
   }
 
-  //todo monad transformers OptionT, FutureT, EitherT
+  //todo monad transformers OptionT, FutureT, EitherT  https://medium.com/virtuslab/meow-start-using-cats-in-your-project-right-now-91737e3b8af4
 }
