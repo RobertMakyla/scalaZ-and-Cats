@@ -226,4 +226,42 @@ object CatsPlayground {
   }
 
   //todo monad transformers OptionT, FutureT, EitherT  https://medium.com/virtuslab/meow-start-using-cats-in-your-project-right-now-91737e3b8af4
+
+  object Monad_Transformers {
+    /**
+     * OptionT[Future, A] contains a value Future[Option[A]]  - so it's flattened
+     *
+     * now when we want to map A=>B  normally we would need to .map(_.map() )  but with OptionT we use single map()
+     *
+     * Why use it?
+     * 1- with map/flatMap if gives immediate access to data inside nested monads:  MonadA[MonadB[_]
+     * 2- many additional useful functions  (EitherT is right biased)
+     */
+    import scala.concurrent.Future
+    import scala.concurrent.ExecutionContext.Implicits.global
+    import cats._
+    import cats.implicits._
+    import cats.data.OptionT
+    import cats.data.EitherT
+    import cats.instances.future._
+
+    val resultFut: Future[Option[Int]] = Future.successful(Some(123))
+
+    val mappedResult: OptionT[Future, Int] = OptionT(resultFut).map(_ * 2)
+
+    val mappedResultValue: Future[Option[Int]] = mappedResult.value
+
+    /** for-comprehension (as it has flatMap) */
+
+    /**
+     * EitherT[F, L, R] it contains a value F[Either[L,R]]
+     *
+     * EitherT is right biased (map/flatMap is applied to right)
+     * It's common to have Future[Either[L,R]] so for right biased we can chang it into EitherT[Future,L,R]
+     */
+    val twentyEitherT: EitherT[Future, String, Int] = for {
+      ten <- EitherT.pure[Future, String](10)
+      twenty <- EitherT.pure[Future, String](ten * 2)
+    } yield twenty
+  }
 }

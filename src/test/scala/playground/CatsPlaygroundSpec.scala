@@ -4,7 +4,7 @@ import cats.Functor
 import org.scalatest.{FreeSpec, MustMatchers}
 
 import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Success}
 import org.scalatest.concurrent.ScalaFutures
 
 class CatsPlaygroundSpec extends FreeSpec with MustMatchers with ScalaFutures {
@@ -70,6 +70,12 @@ class CatsPlaygroundSpec extends FreeSpec with MustMatchers with ScalaFutures {
 
       Monad[Option].pure(42) mustBe Some(42)
       Monad[List].flatMap(List(1,2,3))(e => List(e, e)) mustBe List(1,1,2,2,3,3)
+    }
+
+    "Monad Transformers" in {
+      import CatsPlayground.Monad_Transformers._
+
+      twentyEitherT.value.futureValue mustBe Right(20)
     }
   }
 }
